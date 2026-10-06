@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+body { @apply bg-slate-50 text-slate-800 antialiased dark:bg-[#070b14] dark:text-slate-200; }
+section[id] { scroll-margin-top: 5rem; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .7s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise { animation: none; }
+}
+.glass { @apply border border-slate-200 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-white/5; }
+.grad-text { @apply bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-violet-400 dark:to-cyan-300; }
+.btn { @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500; }
+.btn-primary { @apply btn bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/20 hover:brightness-110; }
+.btn-ghost { @apply btn glass hover:border-indigo-400; }
+
+/* contact form effects */
+.field { transition: border-color .2s, box-shadow .2s, transform .2s; }
+.field:focus { @apply border-indigo-500; box-shadow: 0 0 0 4px rgba(99, 102, 241, .18); transform: translateY(-1px); }
+.submit-btn { transition: transform .2s, filter .2s, box-shadow .2s; }
+.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px -8px rgba(99, 102, 241, .6); }
+.submit-btn:active:not(:disabled) { transform: translateY(0) scale(.99); }
+@keyframes pop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
+.pop { animation: pop .5s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 16px; height: 16px; border-radius: 9999px; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: spin .7s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .pop, .spinner { animation: none; } .field, .submit-btn { transition: none; } }
