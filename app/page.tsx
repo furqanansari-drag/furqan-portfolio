@@ -1,7 +1,8 @@
 import ThemeToggle from "@/components/ThemeToggle";
 import ContactForm from "@/components/ContactForm";
 import Logo, { LogoMark } from "@/components/Logo";
-import { NAV, SKILLS, LEARNING, SERVICES, TOOLS, PROJECTS, WORKFLOW, WHY, WHATSAPP } from "@/lib/data";
+import { NAV, WORKFLOW, WHY } from "@/lib/data";
+import { getContent } from "@/lib/store";
 
 const card = "glass rounded-2xl p-6 transition hover:-translate-y-0.5 hover:border-indigo-400";
 const h2 = "text-3xl font-bold tracking-tight sm:text-4xl";
@@ -16,7 +17,12 @@ function Section({ id, title, intro, children }: { id: string; title: string; in
   );
 }
 
-export default function Home() {
+// Content (projects, number, services...) admin panel se aata hai; har request par fresh.
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const c = await getContent();
+  const wa = c.whatsapp;
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-slate-50/80 backdrop-blur dark:border-white/10 dark:bg-[#070b14]/80">
@@ -86,7 +92,7 @@ export default function Home() {
 
         <Section id="skills" title="My Skills" intro="Skills I work with and am actively developing.">
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {SKILLS.map((g) => (
+            {c.skills.map((g) => (
               <article key={g.title} className={card}>
                 <h3 className="text-lg font-semibold">{g.title}</h3>
                 <ul className="mt-4 flex flex-wrap gap-2">
@@ -99,7 +105,7 @@ export default function Home() {
 
         <Section id="services" title="Services">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map(([t, d]) => (
+            {c.services.map(({ title: t, desc: d }) => (
               <article key={t} className={card}>
                 <h3 className="font-semibold">{t}</h3>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{d}</p>
@@ -115,20 +121,20 @@ export default function Home() {
             <h2 className={`${h2} mt-2`}>Currently Learning</h2>
             <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">Currently expanding my skills in AI Agents, AI Automation and workflow automation using modern AI tools and platforms. These are skills I&apos;m developing, not services I offer yet.</p>
             <ul className="mt-6 flex flex-wrap gap-3">
-              {LEARNING.map((l) => <li key={l} className="rounded-xl border border-dashed border-indigo-400/60 bg-indigo-500/5 px-4 py-2 text-sm font-medium">{l}</li>)}
+              {c.learning.map((l) => <li key={l} className="rounded-xl border border-dashed border-indigo-400/60 bg-indigo-500/5 px-4 py-2 text-sm font-medium">{l}</li>)}
             </ul>
           </div>
         </section>
 
         <Section id="tools" title="Tools I Use">
           <ul className="flex flex-wrap gap-3">
-            {TOOLS.map((t) => <li key={t} className="glass rounded-xl px-4 py-2 text-sm font-medium">{t}</li>)}
+            {c.tools.map((t) => <li key={t} className="glass rounded-xl px-4 py-2 text-sm font-medium">{t}</li>)}
           </ul>
         </Section>
 
         <Section id="projects" title="Projects" intro="Selected project areas. Links are added as projects go public.">
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {PROJECTS.map((p) => (
+            {c.projects.map((p) => (
               <article key={p.name} className={`${card} flex flex-col`}>
                 <h3 className="text-lg font-semibold">{p.name}</h3>
                 <p className="mt-2 flex-1 text-sm text-slate-600 dark:text-slate-400">{p.desc}</p>
@@ -163,11 +169,11 @@ export default function Home() {
 
         <Section id="contact" title="Contact" intro="Tell me about your project. I usually reply on WhatsApp.">
           <div className="grid gap-8 lg:grid-cols-2">
-            <ContactForm />
+            <ContactForm wa={wa} />
             <div className="grid content-start gap-4">
-              <a href={`${WHATSAPP.link}?text=${encodeURIComponent("Hello Furqan, I found your portfolio and would like to talk about a project.")}`} target="_blank" rel="noopener noreferrer" className={`${card} block`}>
+              <a href={`https://wa.me/${wa.num}?text=${encodeURIComponent("Hello Furqan, I found your portfolio and would like to talk about a project.")}`} target="_blank" rel="noopener noreferrer" className={`${card} block`}>
                 <span className="text-sm text-slate-500 dark:text-slate-400">Chat on WhatsApp</span>
-                <span className="block text-xl font-semibold">{WHATSAPP.display}</span>
+                <span className="block text-xl font-semibold">{wa.display}</span>
               </a>
             </div>
           </div>

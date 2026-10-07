@@ -1,5 +1,3 @@
-import { WHATSAPP } from "./data";
-
 export type Inquiry = { name: string; email: string; whatsapp: string; type: string; message: string };
 
 export function buildMessage(d: Inquiry): string {
@@ -18,7 +16,7 @@ export function buildMessage(d: Inquiry): string {
   ].join("\n");
 }
 
-export const waLink = (d: Inquiry) => `${WHATSAPP.link}?text=${encodeURIComponent(buildMessage(d))}`;
+export const waLink = (d: Inquiry, num: string) => `https://wa.me/${num}?text=${encodeURIComponent(buildMessage(d))}`;
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number, maxLines: number): string[] {
   const lines: string[] = [];
@@ -35,7 +33,7 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number, maxLine
 }
 
 // Draws the inquiry card to a canvas (1080x1350) and returns a PNG blob. Browser only.
-export function drawCard(d: Inquiry): Promise<Blob> {
+export function drawCard(d: Inquiry, waDisplay: string): Promise<Blob> {
   const W = 1080, H = 1350;
   const c = document.createElement("canvas"); c.width = W; c.height = H;
   const x = c.getContext("2d")!;
@@ -81,7 +79,7 @@ export function drawCard(d: Inquiry): Promise<Blob> {
   x.fillText(wrap(x, d.email, 860, 1)[0], 110, 1184);
   x.fillText(d.whatsapp ? "WhatsApp: " + d.whatsapp : "WhatsApp: not provided", 110, 1228);
   x.fillStyle = "#94a3b8"; x.font = font(500, 22); x.textAlign = "right";
-  x.fillText("To: " + WHATSAPP.display, 970, 1228); x.textAlign = "left";
+  x.fillText("To: " + waDisplay, 970, 1228); x.textAlign = "left";
 
   return new Promise((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error("toBlob failed"))), "image/png"));
 }

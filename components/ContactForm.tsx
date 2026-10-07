@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { PROJECT_TYPES, WHATSAPP } from "@/lib/data";
+import { PROJECT_TYPES } from "@/lib/data";
 import { drawCard, waLink, type Inquiry } from "@/lib/inquiry";
 import { LogoMark } from "./Logo";
 
 const labelCls = "grid gap-1.5 text-sm font-medium";
 const fieldCls = "field w-full rounded-xl border border-slate-300 bg-white/80 px-4 py-3 text-sm outline-none dark:border-white/15 dark:bg-white/5";
 
-export default function ContactForm() {
+export default function ContactForm({ wa }: { wa: { display: string; num: string } }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [seen, setSeen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -36,7 +36,7 @@ export default function ContactForm() {
     };
     setBusy(true); setNote("");
     try {
-      const b = await drawCard(d);
+      const b = await drawCard(d, wa.display);
       setBlob(b); setUrl(URL.createObjectURL(b));
     } catch { setBlob(null); setUrl(""); setNote("The image card could not be generated in this browser, but you can still send the message on WhatsApp."); }
     setData(d); setBusy(false);
@@ -89,7 +89,7 @@ export default function ContactForm() {
             {note && <p className="mt-3 text-xs text-amber-600 dark:text-amber-400">{note}</p>}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <a href={waLink(data)} target="_blank" rel="noopener noreferrer" className="btn-primary sm:col-span-2">Share on WhatsApp ({WHATSAPP.display})</a>
+            <a href={waLink(data, wa.num)} target="_blank" rel="noopener noreferrer" className="btn-primary sm:col-span-2">Share on WhatsApp ({wa.display})</a>
             {blob && <button type="button" onClick={download} className="btn-ghost">Download Inquiry Card</button>}
             {blob && <button type="button" onClick={shareImage} className="btn-ghost">Share Card Image</button>}
             <button type="button" onClick={() => { setData(null); setBlob(null); setUrl(""); setNote(""); }} className="btn-ghost sm:col-span-2">Edit details</button>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { SITE, WHATSAPP } from "@/lib/data";
+import { SITE } from "@/lib/data";
+import { getContent } from "@/lib/store";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -22,15 +23,15 @@ export const viewport: Viewport = {
 
 const themeScript = `try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    { "@type": "Person", "@id": `${SITE.url}/#person`, name: SITE.name, url: SITE.url, jobTitle: "Web Developer & Digital Designer", address: { "@type": "PostalAddress", addressCountry: "PK" }, knowsAbout: ["Web development", "Next.js", "Digital design", "AI-assisted development"], alternateName: "DRAG" },
-    { "@type": "ProfessionalService", "@id": `${SITE.url}/#service`, name: `${SITE.name} — Web & Digital Solutions`, url: SITE.url, description: SITE.description, areaServed: ["PK", "Worldwide"], telephone: `+${WHATSAPP.num}`, founder: { "@id": `${SITE.url}/#person` } },
-  ],
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { whatsapp } = await getContent();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Person", "@id": `${SITE.url}/#person`, name: SITE.name, url: SITE.url, jobTitle: "Web Developer & Digital Designer", address: { "@type": "PostalAddress", addressCountry: "PK" }, knowsAbout: ["Web development", "Next.js", "Digital design", "AI-assisted development"], alternateName: "DRAG" },
+      { "@type": "ProfessionalService", "@id": `${SITE.url}/#service`, name: `${SITE.name} — Web & Digital Solutions`, url: SITE.url, description: SITE.description, areaServed: ["PK", "Worldwide"], telephone: `+${whatsapp.num}`, founder: { "@id": `${SITE.url}/#person` } },
+    ],
+  };
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
