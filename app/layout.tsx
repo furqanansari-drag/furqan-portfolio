@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", url: SITE.url, siteName: SITE.name, title: SITE.title, description: SITE.description, locale: "en_US" },
   twitter: { card: "summary", title: SITE.title, description: SITE.description },
   robots: { index: true, follow: true },
-  // Search Console verification (baad mein): verification: { google: "YOUR_CODE" },
+  verification: { google: "tWXldbjL-firN-ab-ibbM5UEp6j3GMdr42Qw0Lbe7o8" },
 };
 
 export const viewport: Viewport = {
